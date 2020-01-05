@@ -32,7 +32,11 @@ public class Application : Gtk.Application {
         main_window.default_width = 600;
         main_window.default_height = 300;
         main_window.title = "PerfectPitch";
+        main_window.resizable = false;
 
+        var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
+
+        main_window.add (how_to_message);
         main_window.show_all ();
     }
 

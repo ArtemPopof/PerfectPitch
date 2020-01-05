@@ -43,9 +43,11 @@ public class Application : Gtk.Application {
         // eq panel
         var eq_panel = new Gtk.Grid ();
         eq_panel.halign = Gtk.Align.CENTER;
+        eq_panel.margin_bottom = 12;
 
         var eq_switch_label = new Gtk.Label ("EQ");
         eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H2_LABEL);
+        eq_switch_label.margin_end = 12;
         var eq_switch = new Gtk.Switch ();
         eq_panel.add (eq_switch_label);
         eq_panel.add (eq_switch);

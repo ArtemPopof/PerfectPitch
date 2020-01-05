@@ -29,14 +29,32 @@ public class Application : Gtk.Application {
 
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
+        main_window.title = "PerfectPitch";
+
         main_window.default_width = 600;
         main_window.default_height = 300;
-        main_window.title = "PerfectPitch";
         main_window.resizable = false;
+
+        var content_panel = new Gtk.Grid ();
+        content_panel.orientation = Gtk.VERTICAL;
 
         var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
 
-        main_window.add (how_to_message);
+        // eq panel
+        var eq_panel = new Gtk.Grid ();
+        eq_panel.halign = Gtk.Align.CENTER;
+
+        var eq_switch_label = new Gtk.Label ("EQ");
+        eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H2_LABEL);
+        var eq_switch = new Gtk.Switch ();
+        eq_panel.add (eq_switch_label);
+        eq_panel.add (eq_switch);
+
+        content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
+        content_panel.add (how_to_message);
+        content_panel.add (eq_panel);
+
+        main_window.add (content_panel);
         main_window.show_all ();
     }
 

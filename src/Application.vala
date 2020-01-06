@@ -47,6 +47,9 @@ public class Application : Gtk.Application {
 
         // start button
         var start_button = new Gtk.Button.with_label ("Start");
+        start_button.margin_start = 20;
+        start_button.margin_end = 20;
+        start_button.preferred_width = 100;
         start_button.clicked.connect (() => {
             player.play_file ("res/bensound-jazzyfrenchy.mp3");
         });

@@ -17,9 +17,11 @@ add_project_arguments('-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE', 
 executable(
     meson.project_name(),
     'src/Application.vala',
+    'src/Player.vala',
     dependencies: [
         dependency('granite'),
         dependency('gtk+-3.0'),
+        dependency('gstreamer-1.0')
     ],
     install: true
 )

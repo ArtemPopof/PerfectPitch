@@ -20,13 +20,18 @@
 */
 public class Application : Gtk.Application {
 
-    Application () {
+    private Player player;
+
+    Application (Player player) {
         Object (
             application_id: "com.github.ArtemPopof.PerfectPitch",
             flags: ApplicationFlags.FLAGS_NONE
         );
+
+        this.player = player;
     }
 
+    // TODO refactor
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
         main_window.title = "PerfectPitch";
@@ -39,6 +44,12 @@ public class Application : Gtk.Application {
         content_panel.orientation = Gtk.VERTICAL;
 
         var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
+
+        // start button
+        var start_button = new Gtk.Button.with_label ("Start");
+        start_button.clicked.connect (() => {
+            player.play_file ("res/bensound-jazzyfrenchy.mp3");
+        });
 
         // eq panel
         var eq_panel = new Gtk.Grid ();
@@ -54,6 +65,7 @@ public class Application : Gtk.Application {
 
         content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         content_panel.add (how_to_message);
+        content_panel.add (start_button);
         content_panel.add (eq_panel);
 
         main_window.add (content_panel);
@@ -61,6 +73,10 @@ public class Application : Gtk.Application {
     }
 
     public static int main (string[] args) {
-        return new Application ().run (args);
+        var player = new Player ();
+        player.init (args);
+        //player.set_volume (0.1);
+
+        return new Application (player).run (args);
     }
 }

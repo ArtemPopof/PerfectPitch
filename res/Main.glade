@@ -2,7 +2,18 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkApplicationWindow">
+  <object class="GtkWindow">
+    <property name="name">some_window</property>
+    <property name="can_focus">False</property>
+    <property name="default_width">440</property>
+    <property name="default_height">250</property>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
+  <object class="GtkApplicationWindow" id="main_window">
+    <property name="name">main_window</property>
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="default_width">300</property>
     <property name="default_height">250</property>
@@ -15,36 +26,49 @@
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
+            <property name="name">welcome_message</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Some Text</property>
-            <property name="justify">center</property>
-            <attributes>
-              <attribute name="font-desc" value="Sans Bold 31"/>
-            </attributes>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Some Text</property>
+                <property name="justify">center</property>
+                <attributes>
+                  <attribute name="font-desc" value="Sans Bold 31"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">This text should explain how to use my app and not waste your time. Please read it carefully and if you have any questions, please don't hesitate to ask</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <attributes>
+                  <attribute name="font-desc" value="Serif 16"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">This text should explain how to use my app and not waste your time. Please read it carefully and if you have any questions, please don't hesitate to ask</property>
-            <property name="justify">center</property>
-            <property name="wrap">True</property>
-            <attributes>
-              <attribute name="font-desc" value="Serif 16"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
           </packing>
         </child>
         <child>

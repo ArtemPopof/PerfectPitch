@@ -33,46 +33,60 @@ public class Application : Gtk.Application {
 
     // TODO refactor
     protected override void activate () {
-        var main_window = new Gtk.ApplicationWindow (this);
-        main_window.title = "PerfectPitch";
+        // var main_window = new Gtk.ApplicationWindow (this);
+        // main_window.title = "PerfectPitch";
 
-        main_window.default_width = 600;
-        main_window.default_height = 300;
-        main_window.resizable = false;
+        // main_window.default_width = 600;
+        // main_window.default_height = 300;
+        // main_window.resizable = false;
 
-        var content_panel = new Gtk.Grid ();
-        content_panel.orientation = Gtk.VERTICAL;
+        // var content_panel = new Gtk.Grid ();
+        // content_panel.orientation = Gtk.VERTICAL;
 
-        var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
+        // var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
 
-        // start button
-        var start_button = new Gtk.Button.with_label ("Start");
-        start_button.margin_start = 20;
-        start_button.margin_end = 20;
-        start_button.preferred_width = 100;
-        start_button.clicked.connect (() => {
-            player.play_file ("res/bensound-jazzyfrenchy.mp3");
-        });
+        // // start button
+        // var start_button = new Gtk.Button.with_label ("Start");
+        // start_button.margin_start = 20;
+        // start_button.margin_end = 20;
+        // start_button.clicked.connect (() => {
+        //     player.play_file ("res/bensound-jazzyfrenchy.mp3");
+        // });
 
-        // eq panel
-        var eq_panel = new Gtk.Grid ();
-        eq_panel.halign = Gtk.Align.CENTER;
-        eq_panel.margin_bottom = 12;
+        // // eq panel
+        // var eq_panel = new Gtk.Grid ();
+        // eq_panel.halign = Gtk.Align.CENTER;
+        // eq_panel.margin_bottom = 12;
 
-        var eq_switch_label = new Gtk.Label ("EQ");
-        eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H2_LABEL);
-        eq_switch_label.margin_end = 12;
-        var eq_switch = new Gtk.Switch ();
-        eq_panel.add (eq_switch_label);
-        eq_panel.add (eq_switch);
+        // var eq_switch_label = new Gtk.Label ("EQ");
+        // eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H2_LABEL);
+        // eq_switch_label.margin_end = 12;
+        // var eq_switch = new Gtk.Switch ();
+        // eq_panel.add (eq_switch_label);
+        // eq_panel.add (eq_switch);
 
-        content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
-        content_panel.add (how_to_message);
-        content_panel.add (start_button);
-        content_panel.add (eq_panel);
+        // content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
+        // content_panel.add (how_to_message);
+        // content_panel.add (start_button);
+        // content_panel.add (eq_panel);
 
-        main_window.add (content_panel);
-        main_window.show_all ();
+        // main_window.add (content_panel);
+        // main_window.show_all ();
+
+        var builder = new Gtk.Builder ();
+        /* Getting the glade file */
+        try {
+            builder.add_from_file ("res/Main.glade");
+        } catch (Error err) {
+            stdout.printf ("Can't read main window template: %s\n", err.message);
+        }
+
+        var window = builder.get_object ("main_window") as Gtk.ApplicationWindow;
+        window.application = this;
+        var welcome_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
+        builder.expose_object ("welcome_message", welcome_message);
+
+        window.show_all ();
     }
 
     public static int main (string[] args) {

@@ -80,7 +80,7 @@ public class Application : Gtk.Application {
         for (int i = 0; i < 4; i++) {
             var card = new Gtk.Frame (null);
             card.get_style_context(). add_class (Granite.STYLE_CLASS_CARD);
-            card.margin_right = 20;
+            card.margin_end = 20;
 
             var variantLabel = new Gtk.Label ("440 Hz");
             variantLabel.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);

@@ -29,7 +29,12 @@ public class Player {
 
     public void play_file (string file_name) {
         dynamic Element play = ElementFactory.make ("playbin", "play");
-        play.uri = Gst.filename_to_uri (file_name);
+        
+        try {
+            play.uri = Gst.filename_to_uri (file_name);
+        } catch (Error e) {
+            warning(e.message);
+        }
 
         Gst.Bus bus = play.get_bus ();
         bus.add_watch (0, bus_callback);

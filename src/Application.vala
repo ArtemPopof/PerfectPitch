@@ -21,23 +21,23 @@
 public class Application : Gtk.Application, UiGameListener {
 
     private Player player;
-    private MainController main_controller;
+    private MainController controller;
     
     private Gtk.Label[] frequency_options = new Gtk.Label[4];
 
-    Application (Player player, MainController main_controller) {
+    Application (Player player) {
         Object (
             application_id: "com.github.ArtemPopof.PerfectPitch",
             flags: ApplicationFlags.FLAGS_NONE
         );
 
         this.player = player;
-        this.main_controller = main_controller;
+        this.controller = new MainController (this);
     }
 
     public void game_started (string[] wrong_frequencies) {
         for (int i = 0; i < frequency_options.length; i++) {
-            frequency_options[i].text = wrong_frequencies[i];
+            frequency_options[i].label = wrong_frequencies[i];
         }
     }
 
@@ -111,7 +111,7 @@ public class Application : Gtk.Application, UiGameListener {
         eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H3_LABEL);
         eq_switch_label.margin_end = 12;
         var eq_switch = new Gtk.Switch ();
-        eq_switch.enabled = true;
+        eq_switch.active = true;
         eq_panel.add (eq_switch_label);
         eq_panel.add (eq_switch);
 
@@ -135,6 +135,7 @@ public class Application : Gtk.Application, UiGameListener {
         start_button.clicked.connect (() => {
             start_button.visible = false;
             after_start_panel.visible = true;            
+            controller.start_game ();
             player.play_file ("res/bensound-jazzyfrenchy.mp3");
         });
         // var builder = new Gtk.Builder ();
@@ -155,8 +156,6 @@ public class Application : Gtk.Application, UiGameListener {
         var player = new Player ();
         player.init (args);
 
-        var controller = new MainController (this);
-
-        return new Application (player, controller).run (args);
+        return new Application (player).run (args);
     }
 }

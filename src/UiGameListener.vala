@@ -18,7 +18,7 @@
 *
 * Authored by: Artem Popov <ArtemPopovSerg@gmail.com>
 */
-interface UiGameListener {
+public interface UiGameListener : GLib.Object {
 
     public abstract void game_started (string[] wrong_frequencies);
 }

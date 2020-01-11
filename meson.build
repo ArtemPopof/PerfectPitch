@@ -18,6 +18,8 @@ executable(
     meson.project_name(),
     'src/Application.vala',
     'src/Player.vala',
+    'src/MainController.vala',
+    'src/UiGameListener.vala',
     dependencies: [
         dependency('granite'),
         dependency('gtk+-3.0'),

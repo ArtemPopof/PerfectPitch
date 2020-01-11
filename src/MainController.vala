@@ -32,7 +32,7 @@ public class MainController {
         var random_freq = frequencies[random_freq_index];
 
         var wrong_frequencies = get_random_wrong_freqs (random_freq_index);
-        listener.game_started (random_freq, wrong_frequencies);
+        listener.game_started (wrong_frequencies);
     }
 
     private string[] get_random_wrong_freqs (int correct_freq_index) {
@@ -48,11 +48,11 @@ public class MainController {
     }
 
     private string[] delete_element (string[] array, int element_index) {
-        array.move (element_index + 1, element_index, random_freqs.length - element_index - 1);
-        return array [0, array.length - 1];
+        array.move (element_index + 1, element_index, array.length - element_index - 1);
+        return array [0:array.length - 1];
     }
 
     private int get_random_index (string[] array) {
-        return array[Random.int_range (0, array.size)];
+        return Random.int_range (0, array.length);
     }
 }

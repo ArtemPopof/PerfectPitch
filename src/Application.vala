@@ -18,21 +18,30 @@
 *
 * Authored by: Artem Popov <ArtemPopovSerg@gmail.com>
 */
-public class Application : Gtk.Application {
+public class Application : Gtk.Application, UiGameListener {
 
     private Player player;
+    private MainController main_controller;
+    
+    private Gtk.Label[] frequency_options = new Gtk.Label[4];
 
-    Application (Player player) {
+    Application (Player player, MainController main_controller) {
         Object (
             application_id: "com.github.ArtemPopof.PerfectPitch",
             flags: ApplicationFlags.FLAGS_NONE
         );
 
         this.player = player;
+        this.main_controller = main_controller;
+    }
+
+    public void game_started (string[] wrong_frequencies) {
+        for (int i = 0; i < frequency_options.length; i++) {
+            frequency_options[i].text = wrong_frequencies[i];
+        }
     }
 
     // TODO refactor
-    // TODO glade + granite widgets?
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
         main_window.title = "PerfectPitch";
@@ -85,6 +94,8 @@ public class Application : Gtk.Application {
             var variantLabel = new Gtk.Label ("440 Hz");
             variantLabel.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
             variantLabel.margin = 20;
+
+            frequency_options[i] = variantLabel;
 
             card.add (variantLabel);
 
@@ -143,8 +154,9 @@ public class Application : Gtk.Application {
     public static int main (string[] args) {
         var player = new Player ();
         player.init (args);
-        //player.set_volume (0.1);
 
-        return new Application (player).run (args);
+        var controller = new MainController (this);
+
+        return new Application (player, controller).run (args);
     }
 }

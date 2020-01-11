@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=PitchPerfect
+GenericName=Ear training app.
+Comment=Ear training app for elementary OS.
+Categories=Utility;
+Exec=com.github.artempopof.pitchperfect
+Icon=com.github.artempopof.pitchperfect
+Terminal=false
+Type=Application
+Keywords=Ear;Training;

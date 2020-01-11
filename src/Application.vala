@@ -100,7 +100,7 @@ public class Application : Gtk.Application {
         eq_switch_label.get_style_context(). add_class (Granite.STYLE_CLASS_H3_LABEL);
         eq_switch_label.margin_end = 12;
         var eq_switch = new Gtk.Switch ();
-        eq_switch.enabled = true;
+        eq_switch.set_active (true);
         eq_panel.add (eq_switch_label);
         eq_panel.add (eq_switch);
 

@@ -35,7 +35,7 @@ public class Application : Gtk.Application {
     // TODO glade + granite widgets?
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
-        main_window.title = "PerfectPitch";
+        main_window.title = _("PerfectPitch");
 
         main_window.default_width = 600;
         main_window.default_height = 400;
@@ -43,17 +43,17 @@ public class Application : Gtk.Application {
 
         var content_panel = new Gtk.Box (Gtk.VERTICAL, 2);
 
-        var how_to_message = new Granite.Widgets.Welcome (("Guess boosted frequency"), ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
+        var how_to_message = new Granite.Widgets.Welcome ((_("Guess boosted frequency")), (_("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds.")));
         how_to_message.valign = Gtk.CENTER;
-        how_to_message.append ("text-x-vala", "Start", "Try to guess boosted frequency");
+        how_to_message.append ("text-x-vala", "Start", _("Try to guess boosted frequency"));
         
         // how to 
         var header_message = new Gtk.Box (Gtk.VERTICAL, 2);
-        var header_title = new Gtk.Label ("Guess boosted frequency");
+        var header_title = new Gtk.Label (_("Guess boosted frequency"));
         header_title.justify = Gtk.Justification.CENTER;
         header_title.hexpand = true;
         header_title.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
-        var header_description = new Gtk.Label ("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds.");
+        var header_description = new Gtk.Label (_("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds."));
         header_description.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
         header_description.get_style_context ().add_class (Gtk.STYLE_CLASS_DIM_LABEL);
 
@@ -68,7 +68,7 @@ public class Application : Gtk.Application {
         header_message.margin_bottom = 40;
 
         // start button
-        var start_button = new Gtk.Button.with_label ("Start");
+        var start_button = new Gtk.Button.with_label (_("Start"));
         start_button.halign = Gtk.CENTER;
         start_button.valign = Gtk.START;
         start_button.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
@@ -82,7 +82,7 @@ public class Application : Gtk.Application {
             card.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
             card.margin_end = 20;
 
-            var variantLabel = new Gtk.Label ("440 Hz");
+            var variantLabel = new Gtk.Label (_("440 Hz"));
             variantLabel.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
             variantLabel.margin = 20;
 
@@ -96,7 +96,7 @@ public class Application : Gtk.Application {
         eq_panel.halign = Gtk.Align.CENTER;
         eq_panel.margin_bottom = 20;
 
-        var eq_switch_label = new Gtk.Label ("EQ");
+        var eq_switch_label = new Gtk.Label (_("EQ"));
         eq_switch_label.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
         eq_switch_label.margin_end = 12;
         var eq_switch = new Gtk.Switch ();

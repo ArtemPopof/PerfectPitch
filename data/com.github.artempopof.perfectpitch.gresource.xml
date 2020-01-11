@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+  <gresource prefix="/com/github/artempopof/perfectpitch">
+    <file alias="bensound-jazzyfrenchy.mp3">sounds/bensound-jazzyfrenchy.mp3</file>
+  </gresource>
+</gresources>

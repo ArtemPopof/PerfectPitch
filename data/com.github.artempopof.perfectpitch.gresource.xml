@@ -3,4 +3,7 @@
   <gresource prefix="/com/github/artempopof/perfectpitch">
     <file alias="bensound-jazzyfrenchy.mp3">sounds/bensound-jazzyfrenchy.mp3</file>
   </gresource>
+  <gresource prefix="/com/github/artempopof/perfectpitch">
+    <file alias="main.css">css/main.css</file>
+  </gresource>
 </gresources>

@@ -1,0 +1,7 @@
+.guess_card_right {
+    border: 2px solid #22ee22;
+}
+
+.guess_card_wrong {
+    border: 2px solid #ee2222;
+}

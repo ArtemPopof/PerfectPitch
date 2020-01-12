@@ -47,6 +47,7 @@ public class Application : Gtk.Application, UiGameListener {
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
         main_window.title = _("PerfectPitch");
+        configure_styles ();
 
         main_window.default_width = 600;
         main_window.default_height = 400;
@@ -136,7 +137,6 @@ public class Application : Gtk.Application, UiGameListener {
         var event_box = new Gtk.EventBox ();
         event_box.margin_bottom = 10;
         var card = new Gtk.Frame (null);
-        card.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         card.margin_end = 20;
 
         event_box.add (card);
@@ -150,6 +150,7 @@ public class Application : Gtk.Application, UiGameListener {
 
         event_box.button_press_event.connect ((sender, event) => {
             controller.user_clicked (variant_label.label);
+            card.get_style_context ().add_class ("guess_card_wrong");
             return true;
         });
 
@@ -163,4 +164,14 @@ public class Application : Gtk.Application, UiGameListener {
         var app = new Application (player);
         return app.run (args);
     }
+
+    private static void configure_styles () {
+        var css_provider = new Gtk.CssProvider ();
+        try {
+            css_provider.load_from_path ("css/main.css");
+        } catch (Error error) {
+            warning ("style configuration failed: %s", error.message);
+        }
+        Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER); 
+   }
 }

@@ -1,4 +1,6 @@
 sources = files(
     'Application.vala',
-    'Player.vala'
+    'Player.vala',
+    'MainController.vala',
+    'UiGameListener.vala'
 )

@@ -18,9 +18,12 @@
 *
 * Authored by: Artem Popov <artempopovserg@gmail.com>
 */
-public class Application : Gtk.Application {
+public class Application : Gtk.Application, UiGameListener {
 
     private Player player;
+    private MainController controller;
+    
+    private Gtk.Label[] frequency_options = new Gtk.Label[4];
 
     Application (Player player) {
         Object (
@@ -29,10 +32,16 @@ public class Application : Gtk.Application {
         );
 
         this.player = player;
+        this.controller = new MainController (this);
+    }
+
+    public void game_started (string[] wrong_frequencies) {
+        for (int i = 0; i < frequency_options.length; i++) {
+            frequency_options[i].label = wrong_frequencies[i];
+        }
     }
 
     // TODO refactor
-    // TODO glade + granite widgets?
     protected override void activate () {
         var main_window = new Gtk.ApplicationWindow (this);
         main_window.title = _("PerfectPitch");
@@ -86,6 +95,8 @@ public class Application : Gtk.Application {
             variantLabel.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
             variantLabel.margin = 20;
 
+            frequency_options[i] = variantLabel;
+
             card.add (variantLabel);
 
             guess_variants.add (card);
@@ -100,7 +111,8 @@ public class Application : Gtk.Application {
         eq_switch_label.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
         eq_switch_label.margin_end = 12;
         var eq_switch = new Gtk.Switch ();
-        eq_switch.set_active (true);
+        eq_switch.active = true;
+        
         eq_panel.add (eq_switch_label);
         eq_panel.add (eq_switch);
 
@@ -124,26 +136,14 @@ public class Application : Gtk.Application {
         start_button.clicked.connect (() => {
             start_button.visible = false;
             after_start_panel.visible = true;            
+            controller.start_game ();
             player.play_file ("///usr/share/artempopof/perfectpitch/sounds/bensound-jazzyfrenchy.mp3");
         });
-        // var builder = new Gtk.Builder ();
-        // /* Getting the glade file */
-        // try {
-        //     builder.add_from_file ("data/Main.glade");
-        // } catch (Error e) {
-        //     stdout.printf ("Can't read main window template: %s\n", e.message);
-        // }
-
-        // var window = builder.get_object ("main_window") as Gtk.ApplicationWindow;
-        // window.application = this;
-
-        // window.show_all ();
     }
 
     public static int main (string[] args) {
         var player = new Player ();
         player.init (args);
-        //player.set_volume (0.1);
 
         var app = new Application (player);
         return app.run (args);

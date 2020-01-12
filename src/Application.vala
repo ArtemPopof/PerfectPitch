@@ -20,10 +20,12 @@
 */
 public class Application : Gtk.Application, UiGameListener {
 
+    private const int ANSWER_OPTIONS_COUNT = 5;
+
     private Player player;
     private MainController controller;
     
-    private Gtk.Label[] frequency_options = new Gtk.Label[4];
+    private Gtk.Label[] frequency_options = new Gtk.Label[ANSWER_OPTIONS_COUNT];
 
     Application (Player player) {
         Object (
@@ -36,7 +38,7 @@ public class Application : Gtk.Application, UiGameListener {
     }
 
     public void game_started (string[] wrong_frequencies) {
-        for (int i = 0; i < frequency_options.length; i++) {
+        for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
             frequency_options[i].label = wrong_frequencies[i];
         }
     }
@@ -86,20 +88,9 @@ public class Application : Gtk.Application, UiGameListener {
         var guess_variants = new Gtk.Grid ();
         guess_variants.halign = Gtk.CENTER;
 
-        for (int i = 0; i < 4; i++) {
-            var card = new Gtk.Frame (null);
-            card.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
-            card.margin_end = 20;
-
-            var variantLabel = new Gtk.Label (_("440 Hz"));
-            variantLabel.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
-            variantLabel.margin = 20;
-
-            frequency_options[i] = variantLabel;
-
-            card.add (variantLabel);
-
-            guess_variants.add (card);
+        for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
+            var label = create_option_card (guess_variants);
+            frequency_options[i] = label;
         }
 
         // eq panel
@@ -137,8 +128,23 @@ public class Application : Gtk.Application, UiGameListener {
             start_button.visible = false;
             after_start_panel.visible = true;            
             controller.start_game ();
-            player.play_file ("///usr/share/artempopof/perfectpitch/sounds/bensound-jazzyfrenchy.mp3");
+            player.play_file ("sounds/bensound-jazzyfrenchy.mp3");
         });
+    }
+
+    private Gtk.Label create_option_card (Gtk.Container parent) {
+        var card = new Gtk.Frame (null);
+        card.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
+        card.margin_end = 20;
+
+        var variant_label = new Gtk.Label (_("440 Hz"));
+        variant_label.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
+        variant_label.margin = 20;
+
+        card.add (variant_label);
+        parent.add (card);
+
+        return variant_label;
     }
 
     public static int main (string[] args) {

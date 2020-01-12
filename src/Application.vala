@@ -133,16 +133,25 @@ public class Application : Gtk.Application, UiGameListener {
     }
 
     private Gtk.Label create_option_card (Gtk.Container parent) {
+        var event_box = new Gtk.EventBox ();
+        event_box.margin_bottom = 10;
         var card = new Gtk.Frame (null);
         card.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         card.margin_end = 20;
+
+        event_box.add (card);
 
         var variant_label = new Gtk.Label (_("440 Hz"));
         variant_label.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
         variant_label.margin = 20;
 
         card.add (variant_label);
-        parent.add (card);
+        parent.add (event_box);
+
+        event_box.button_press_event.connect ((sender, event) => {
+            controller.user_clicked (variant_label.label);
+            return true;
+        });
 
         return variant_label;
     }

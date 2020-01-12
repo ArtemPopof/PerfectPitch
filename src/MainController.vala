@@ -71,4 +71,8 @@ public class MainController {
 
         return result_array;
     }
+
+    public void user_clicked (string variant) {
+        stdout.printf ("clicked %s", variant);
+    }
 }

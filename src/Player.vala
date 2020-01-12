@@ -18,7 +18,7 @@ using Gst;
 * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA 02110-1301 USA
 *
-* Authored by: Artem Popov <ArtemPopovSerg@gmail.com>
+* Authored by: Artem Popov <artempopovserg@gmail.com>
 */
 public class Player {
     private MainLoop loop = new MainLoop ();
@@ -29,7 +29,12 @@ public class Player {
 
     public void play_file (string file_name) {
         dynamic Element play = ElementFactory.make ("playbin", "play");
-        play.uri = Gst.filename_to_uri (file_name);
+        
+        try {
+            play.uri = Gst.filename_to_uri (file_name);
+        } catch (Error e) {
+            warning (e.message);
+        }
 
         Gst.Bus bus = play.get_bus ();
         bus.add_watch (0, bus_callback);
@@ -61,10 +66,10 @@ public class Player {
     }
 
     private void processError(Message message) {
-        GLib.Error err;
+        GLib.Error e;
         string debug;
-        message.parse_error (out err, out debug);
-        stdout.printf ("Error: %s\n", err.message);
+        message.parse_error (out e, out debug);
+        stdout.printf ("Error: %s\n", e.message);
         stdout.printf ("Debug: %s\n", debug);
         loop.quit ();
     }

@@ -1,29 +1,37 @@
-project('com.github.ArtemPopof.PerfectPitch', 'vala', 'c')
+project('com.github.artempopof.perfectpitch', 'vala', 'c', version: '0.0.1')
 
+gnome = import('gnome')
 i18n = import('i18n')
 
-conf = configuration_data()
-conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-configure_file(output: 'config.h', configuration: conf)
-config_h_dir = include_directories('.')
+add_project_arguments(
+    '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),
+    language: 'c'
+)
 
-c_args = [
-  '-include', 'config.h'
+asresources = gnome.compile_resources(
+    'as-resources',
+    join_paths('data', meson.project_name()) + '.gresource.xml',
+    source_dir: 'data',
+    c_name: 'as'
+)
+
+dependencies = [
+    dependency('granite'),
+    dependency('gtk+-3.0'),
+    dependency('gstreamer-1.0')
 ]
 
-add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
-add_project_arguments('-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE', language : 'c')
+subdir('src')
 
 executable(
     meson.project_name(),
-    'src/Application.vala',
-    'src/Player.vala',
-    'src/MainController.vala',
-    'src/UiGameListener.vala',
-    dependencies: [
-        dependency('granite'),
-        dependency('gtk+-3.0'),
-        dependency('gstreamer-1.0')
-    ],
+    asresources,
+    sources,
+    dependencies: dependencies,
     install: true
 )
+
+subdir('data')
+subdir('po')
+
+meson.add_install_script('meson/post_install.py')

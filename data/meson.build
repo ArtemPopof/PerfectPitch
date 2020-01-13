@@ -32,7 +32,3 @@ install_data (
     join_paths('sounds', 'bensound-jazzyfrenchy.mp3'),
     install_dir: join_paths('share', 'artempopof', 'perfectpitch', 'sounds')
 )
-install_data (
-    join_paths('css', 'main.css'),
-    install_dir: join_paths('share', 'artempopof', 'perfectpitch', 'css')
-)

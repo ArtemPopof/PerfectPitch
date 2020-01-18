@@ -25,7 +25,7 @@ public class Application : Gtk.Application, UiGameListener {
     private Player player;
     private MainController controller;
     
-    private Gtk.Label[] frequency_options = new Gtk.Label[ANSWER_OPTIONS_COUNT];
+    private GuessCard[] frequency_options = new GuessCard[ANSWER_OPTIONS_COUNT];
 
     Application (Player player) {
         Object (
@@ -39,7 +39,16 @@ public class Application : Gtk.Application, UiGameListener {
 
     public void game_started (string[] wrong_frequencies) {
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
-            frequency_options[i].label = wrong_frequencies[i];
+            frequency_options[i].text = wrong_frequencies[i];
+        }
+    }
+    
+    public void lost (string right_frequency) {
+        foreach (var card in frequency_options) {
+            if (card.text == right_frequency) {
+                card.container.get_style_context ().add_class ("guess_card_right");
+            }
+            card.event_box.button_press_event.connect (() => { return true; });
         }
     }
 
@@ -90,8 +99,8 @@ public class Application : Gtk.Application, UiGameListener {
         guess_variants.halign = Gtk.CENTER;
 
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
-            var label = create_option_card (guess_variants);
-            frequency_options[i] = label;
+            var card = create_option_card (guess_variants);
+            frequency_options[i] = card;
         }
 
         // eq panel
@@ -133,7 +142,7 @@ public class Application : Gtk.Application, UiGameListener {
         });
     }
 
-    private Gtk.Label create_option_card (Gtk.Container parent) {
+    private GuessCard create_option_card (Gtk.Container parent) {
         var event_box = new Gtk.EventBox ();
         event_box.margin_bottom = 10;
         var card = new Gtk.Frame (null);
@@ -149,12 +158,22 @@ public class Application : Gtk.Application, UiGameListener {
         parent.add (event_box);
 
         event_box.button_press_event.connect ((sender, event) => {
-            controller.user_clicked (variant_label.label);
-            card.get_style_context ().add_class ("guess_card_wrong");
+            var success = controller.user_clicked (variant_label.label);
+            if (success) {
+                card.get_style_context ().add_class ("guess_card_right");
+            } else {
+                card.get_style_context ().add_class ("guess_card_wrong");
+            }
+
             return true;
         });
 
-        return variant_label;
+        var guess_card = new GuessCard ();
+        guess_card.label = variant_label;
+        guess_card.container = card;
+        guess_card.event_box = event_box;
+        
+        return guess_card;
     }
 
     public static int main (string[] args) {

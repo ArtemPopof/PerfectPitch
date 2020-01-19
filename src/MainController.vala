@@ -22,12 +22,14 @@ public class MainController {
     private const string[] frequencies = {"31 Hz", "63 Hz", "125 Hz", "250 Hz", "500 Hz", "1 kHz", "2 kHz", "4 kHz", "8 kHz", "16 kHz"};
     private UiGameListener listener;
     private string frequency;
+    private bool game_over;
 
     public MainController (UiGameListener listener) {
         this.listener = listener;
     }
 
     public void start_game () {
+        game_over = false;
         var random_freq_index = get_random_index (frequencies);
         frequency = frequencies[random_freq_index];
 
@@ -82,6 +84,12 @@ public class MainController {
             listener.lost (frequency);
         }
         
+        game_over = true;
+
         return win;
+    }
+
+    public bool is_game_over () {
+        return game_over;
     }
 }

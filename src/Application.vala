@@ -48,7 +48,6 @@ public class Application : Gtk.Application, UiGameListener {
             if (card.text == right_frequency) {
                 card.container.get_style_context ().add_class ("guess_card_right");
             }
-            card.event_box.button_press_event.connect (() => { return true; });
         }
     }
 
@@ -158,6 +157,10 @@ public class Application : Gtk.Application, UiGameListener {
         parent.add (event_box);
 
         event_box.button_press_event.connect ((sender, event) => {
+            if (controller.is_game_over ()) {
+                return true;
+            }
+
             var success = controller.user_clicked (variant_label.label);
             if (success) {
                 card.get_style_context ().add_class ("guess_card_right");

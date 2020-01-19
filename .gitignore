@@ -2,3 +2,5 @@ Application
 *~
 build/
 .buildconfig
+.cache/
+.config/

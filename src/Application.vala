@@ -62,14 +62,14 @@ public class Application : Gtk.Application, UiGameListener {
         main_window.default_height = 400;
         main_window.resizable = false;
 
-        var content_panel = new Gtk.Box (Gtk.VERTICAL, 2);
+        var content_panel = new Gtk.Box (VERTICAL, 2);
 
         var how_to_message = new Granite.Widgets.Welcome ((_("Guess boosted frequency")), (_("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds.")));
-        how_to_message.valign = Gtk.CENTER;
+        how_to_message.valign = CENTER;
         how_to_message.append ("text-x-vala", "Start", _("Try to guess boosted frequency"));
         
         // how to 
-        var header_message = new Gtk.Box (Gtk.VERTICAL, 2);
+        var header_message = new Gtk.Box (VERTICAL, 2);
         var header_title = new Gtk.Label (_("Guess boosted frequency"));
         header_title.justify = Gtk.Justification.CENTER;
         header_title.hexpand = true;
@@ -90,13 +90,13 @@ public class Application : Gtk.Application, UiGameListener {
 
         // start button
         var start_button = new Gtk.Button.with_label (_("Start"));
-        start_button.halign = Gtk.CENTER;
-        start_button.valign = Gtk.START;
+        start_button.halign = CENTER;
+        start_button.valign = START;
         start_button.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
 
         // freq cards
         var guess_variants = new Gtk.Grid ();
-        guess_variants.halign = Gtk.CENTER;
+        guess_variants.halign = CENTER;
 
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
             var card = create_option_card (guess_variants);
@@ -104,7 +104,7 @@ public class Application : Gtk.Application, UiGameListener {
         }
 
         // eq panel
-        var eq_panel = new Gtk.Box (Gtk.HORIZONTAL, 2);
+        var eq_panel = new Gtk.Box (HORIZONTAL, 2);
         eq_panel.halign = Gtk.Align.CENTER;
         eq_panel.margin_bottom = 20;
 
@@ -118,10 +118,10 @@ public class Application : Gtk.Application, UiGameListener {
         eq_panel.add (eq_switch);
 
         // after start panel
-        var after_start_panel = new Gtk.Box (Gtk.VERTICAL, 2);
+        var after_start_panel = new Gtk.Box (VERTICAL, 2);
         after_start_panel.add (eq_panel);
         after_start_panel.add (guess_variants);
-        after_start_panel.valign = Gtk.START;
+        after_start_panel.valign = START;
 
         content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         content_panel.add (header_message);
@@ -138,7 +138,7 @@ public class Application : Gtk.Application, UiGameListener {
             start_button.visible = false;
             after_start_panel.visible = true;            
             controller.start_game ();
-            player.play_file ("sounds/bensound-jazzyfrenchy.mp3");
+            player.play_file ("///usr/share/artempopof/perfectpitch/sounds/bensound-jazzyfrenchy.mp3");
         });
     }
 
@@ -187,7 +187,7 @@ public class Application : Gtk.Application, UiGameListener {
     private static void configure_styles () {
         var css_provider = new Gtk.CssProvider ();
         try {
-            css_provider.load_from_path ("css/main.css");
+            css_provider.load_from_path ("///usr/share/artempopof/perfectpitch/css/main.css");
         } catch (Error error) {
             warning ("style configuration failed: %s", error.message);
         }

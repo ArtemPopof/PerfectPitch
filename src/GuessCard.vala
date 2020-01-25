@@ -18,9 +18,28 @@
 *
 * Authored by: Artem Popov <ArtemPopovSerg@gmail.com>
 */
-public interface UiGameListener : GLib.Object {
-
-    public abstract void game_started (string[] frequencies);
+public class GuessCard: GLib.Object {
+    private Gtk.Frame _container;
+    private Gtk.Label _label;
+    private Gtk.EventBox _event_box;
     
-    public abstract void lost (string right_frequency);
+    public Gtk.Frame container {
+        get { return _container; }
+        set { _container = value; }
+    }
+    
+    public Gtk.Label label {
+        get { return _label; }
+        set { _label = value; }
+    }
+    
+    public string text {
+        get { return _label.label; }
+        set { _label.label = value; }
+    }
+    
+    public Gtk.EventBox event_box {
+        get { return _event_box; }
+        set { _event_box = value; }
+    }
 }

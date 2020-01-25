@@ -21,19 +21,21 @@
 public class MainController {
     private const string[] frequencies = {"31 Hz", "63 Hz", "125 Hz", "250 Hz", "500 Hz", "1 kHz", "2 kHz", "4 kHz", "8 kHz", "16 kHz"};
     private UiGameListener listener;
-    private int frequency;
+    private string frequency;
+    private bool game_over;
 
     public MainController (UiGameListener listener) {
         this.listener = listener;
     }
 
     public void start_game () {
+        game_over = false;
         var random_freq_index = get_random_index (frequencies);
-        var random_freq = frequencies[random_freq_index];
+        frequency = frequencies[random_freq_index];
 
         var wrong_frequencies = get_random_wrong_freqs (random_freq_index);
-        var wrong_plus_right_freqs = add_in_random_index (wrong_frequencies, random_freq);
-
+        var wrong_plus_right_freqs = add_in_random_index (wrong_frequencies, frequency);
+        
         listener.game_started (wrong_plus_right_freqs);
     }
 
@@ -72,7 +74,22 @@ public class MainController {
         return result_array;
     }
 
-    public void user_clicked (string variant) {
-        stdout.printf ("clicked %s", variant);
+    /*
+    * User clicked on some option
+    * @return true, if guess was right
+    */
+    public bool user_clicked (string variant) {
+        var win = variant == frequency;
+        if (!win) {
+            listener.lost (frequency);
+        }
+        
+        game_over = true;
+
+        return win;
+    }
+
+    public bool is_game_over () {
+        return game_over;
     }
 }

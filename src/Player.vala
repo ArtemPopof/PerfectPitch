@@ -29,6 +29,8 @@ public class Player {
 
     public void play_file (string file_name) {
         dynamic Element play = ElementFactory.make ("playbin", "play");
+        Gst.Bus bus = play.get_bus ();
+        bus.add_watch (0, bus_callback);
         
         try {
             play.uri = Gst.filename_to_uri (file_name);
@@ -36,9 +38,28 @@ public class Player {
             warning (e.message);
         }
 
-        Gst.Bus bus = play.get_bus ();
-        bus.add_watch (0, bus_callback);
+        /* Create eq bin */
+        dynamic Element equalizer = ElementFactory.make ("equalizer-10bands", "equalizer");
+        dynamic Element convert = ElementFactory.make ("audioconvert", "convert");
+        dynamic Element sink = ElementFactory.make ("autoaudiosink", "audio_sink");
         
+        if (equalizer == null || convert == null || sink == null) {
+            stdout.printf ("ERROR: Cannot initializer gstreamer");
+        }
+
+        var bin = new Gst.Bin ("audio_sink_bin");
+        bin.add_many (equalizer, convert, sink);
+        equalizer.link_many (convert, sink);
+        var pad = new Gst.GhostPad ("sink", equalizer.get_static_pad ("sink"));
+        pad.set_active (true);
+        bin.add_pad (pad);
+
+        /* Configure equalizer */
+        equalizer.band5 = 12.0;
+
+        /* Set playbin's audio sink to ours */
+        play.audio_sink = bin;
+
         play.set_state (State.PLAYING);
 
         loop.run ();

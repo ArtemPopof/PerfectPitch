@@ -25,7 +25,7 @@ public class Application : Gtk.Application, UiGameListener {
     private Player player;
     private MainController controller;
     
-    private Gtk.Label[] frequency_options = new Gtk.Label[ANSWER_OPTIONS_COUNT];
+    private GuessCard[] frequency_options = new GuessCard[ANSWER_OPTIONS_COUNT];
 
     Application (Player player) {
         Object (
@@ -39,7 +39,15 @@ public class Application : Gtk.Application, UiGameListener {
 
     public void game_started (string[] wrong_frequencies) {
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
-            frequency_options[i].label = wrong_frequencies[i];
+            frequency_options[i].text = wrong_frequencies[i];
+        }
+    }
+    
+    public void lost (string right_frequency) {
+        foreach (var card in frequency_options) {
+            if (card.text == right_frequency) {
+                card.container.get_style_context ().add_class ("guess_card_right");
+            }
         }
     }
 
@@ -53,14 +61,14 @@ public class Application : Gtk.Application, UiGameListener {
         main_window.default_height = 400;
         main_window.resizable = false;
 
-        var content_panel = new Gtk.Box (Gtk.VERTICAL, 2);
+        var content_panel = new Gtk.Box (VERTICAL, 2);
 
         var how_to_message = new Granite.Widgets.Welcome ((_("Guess boosted frequency")), (_("Peaking (Bell) EQ filter is being used to boost a certain frequency range. You need to guess boosted frequency. Use the EQ on/off buttons to compare the equalized and non equalized sounds.")));
-        how_to_message.valign = Gtk.CENTER;
+        how_to_message.valign = CENTER;
         how_to_message.append ("text-x-vala", "Start", _("Try to guess boosted frequency"));
         
         // how to 
-        var header_message = new Gtk.Box (Gtk.VERTICAL, 2);
+        var header_message = new Gtk.Box (VERTICAL, 2);
         var header_title = new Gtk.Label (_("Guess boosted frequency"));
         header_title.justify = Gtk.Justification.CENTER;
         header_title.hexpand = true;
@@ -81,21 +89,21 @@ public class Application : Gtk.Application, UiGameListener {
 
         // start button
         var start_button = new Gtk.Button.with_label (_("Start"));
-        start_button.halign = Gtk.CENTER;
-        start_button.valign = Gtk.START;
+        start_button.halign = CENTER;
+        start_button.valign = START;
         start_button.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
 
         // freq cards
         var guess_variants = new Gtk.Grid ();
-        guess_variants.halign = Gtk.CENTER;
+        guess_variants.halign = CENTER;
 
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
-            var label = create_option_card (guess_variants);
-            frequency_options[i] = label;
+            var card = create_option_card (guess_variants);
+            frequency_options[i] = card;
         }
 
         // eq panel
-        var eq_panel = new Gtk.Box (Gtk.HORIZONTAL, 2);
+        var eq_panel = new Gtk.Box (HORIZONTAL, 2);
         eq_panel.halign = Gtk.Align.CENTER;
         eq_panel.margin_bottom = 20;
 
@@ -109,10 +117,10 @@ public class Application : Gtk.Application, UiGameListener {
         eq_panel.add (eq_switch);
 
         // after start panel
-        var after_start_panel = new Gtk.Box (Gtk.VERTICAL, 2);
+        var after_start_panel = new Gtk.Box (VERTICAL, 2);
         after_start_panel.add (eq_panel);
         after_start_panel.add (guess_variants);
-        after_start_panel.valign = Gtk.START;
+        after_start_panel.valign = START;
 
         content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         content_panel.add (header_message);
@@ -129,11 +137,11 @@ public class Application : Gtk.Application, UiGameListener {
             start_button.visible = false;
             after_start_panel.visible = true;            
             controller.start_game ();
-            player.play_file ("sounds/bensound-jazzyfrenchy.mp3");
+            player.play_file ("///usr/share/artempopof/perfectpitch/sounds/bensound-jazzyfrenchy.mp3");
         });
     }
 
-    private Gtk.Label create_option_card (Gtk.Container parent) {
+    private GuessCard create_option_card (Gtk.Container parent) {
         var event_box = new Gtk.EventBox ();
         event_box.margin_bottom = 10;
         var card = new Gtk.Frame (null);
@@ -149,12 +157,26 @@ public class Application : Gtk.Application, UiGameListener {
         parent.add (event_box);
 
         event_box.button_press_event.connect ((sender, event) => {
-            controller.user_clicked (variant_label.label);
-            card.get_style_context ().add_class ("guess_card_wrong");
+            if (controller.is_game_over ()) {
+                return true;
+            }
+
+            var success = controller.user_clicked (variant_label.label);
+            if (success) {
+                card.get_style_context ().add_class ("guess_card_right");
+            } else {
+                card.get_style_context ().add_class ("guess_card_wrong");
+            }
+
             return true;
         });
 
-        return variant_label;
+        var guess_card = new GuessCard ();
+        guess_card.label = variant_label;
+        guess_card.container = card;
+        guess_card.event_box = event_box;
+        
+        return guess_card;
     }
 
     public static int main (string[] args) {
@@ -167,7 +189,7 @@ public class Application : Gtk.Application, UiGameListener {
 
     private static void configure_styles () {
         var css_provider = new Gtk.CssProvider ();
-        css_provider.load_from_resource ("/com/github/artempopof/perfectpitch/main.css");
+        css_provider.load_from_resource ("/com/github/artempopof/perfectpitch/css/main.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER); 
    }
 }

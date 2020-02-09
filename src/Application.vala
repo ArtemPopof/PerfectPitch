@@ -53,13 +53,7 @@ public class Application : Gtk.Application, UiGameListener {
 
     // TODO refactor
     protected override void activate () {
-        var main_window = new Gtk.ApplicationWindow (this);
-        main_window.title = _("PerfectPitch");
-        configure_styles ();
-
-        main_window.default_width = 600;
-        main_window.default_height = 400;
-        main_window.resizable = false;
+        var main_window = create_main_window ();
 
         var content_panel = new Gtk.Box (VERTICAL, 2);
 
@@ -163,6 +157,20 @@ public class Application : Gtk.Application, UiGameListener {
         guess_card.event_box = event_box;
         
         return guess_card;
+    }
+    
+    private Gtk.Window create_main_window () {
+        var main_window = new Gtk.ApplicationWindow (this);
+        main_window.title = _("PerfectPitch");
+        configure_styles ();
+
+        main_window.default_width = 600;
+        main_window.default_height = 400;
+        main_window.resizable = false;
+        
+        Granite.Widgets.Utils.set_color_primary (main_window, {0, 222, 0, 256});
+        
+        return main_window;
     }
     
     private Gtk.Box create_settings_panel () {

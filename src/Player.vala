@@ -22,13 +22,14 @@ using Gst;
 */
 public class Player {
     private MainLoop loop = new MainLoop ();
+    private dynamic Element play;
 
     public void init (string[] args) {
         Gst.init (ref args);
     }
 
     public void play_file (string file_name) {
-        dynamic Element play = ElementFactory.make ("playbin", "play");
+        play = ElementFactory.make ("playbin", "play");
         Gst.Bus bus = play.get_bus ();
         bus.add_watch (0, bus_callback);
         
@@ -100,7 +101,7 @@ public class Player {
     }
 
     public void set_volume (double volume) {
-        //playbin.set_property ("volume", volume);
+        play.set_property ("volume", volume);
     }
 
 }

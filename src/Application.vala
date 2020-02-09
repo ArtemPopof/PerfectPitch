@@ -102,23 +102,9 @@ public class Application : Gtk.Application, UiGameListener {
             frequency_options[i] = card;
         }
 
-        // eq panel
-        var eq_panel = new Gtk.Box (HORIZONTAL, 2);
-        eq_panel.halign = Gtk.Align.CENTER;
-        eq_panel.margin_bottom = 20;
-
-        var eq_switch_label = new Gtk.Label (_("EQ"));
-        eq_switch_label.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
-        eq_switch_label.margin_end = 12;
-        var eq_switch = new Gtk.Switch ();
-        eq_switch.active = true;
-        
-        eq_panel.add (eq_switch_label);
-        eq_panel.add (eq_switch);
-
         // after start panel
         var after_start_panel = new Gtk.Box (VERTICAL, 2);
-        after_start_panel.add (eq_panel);
+        after_start_panel.add (create_settings_panel ());
         after_start_panel.add (guess_variants);
         after_start_panel.valign = START;
 
@@ -177,6 +163,56 @@ public class Application : Gtk.Application, UiGameListener {
         guess_card.event_box = event_box;
         
         return guess_card;
+    }
+    
+    private Gtk.Box create_settings_panel () {
+        var panel = new Gtk.Box (HORIZONTAL, 2);
+        panel.add (create_eq_panel ());
+        panel.add (create_volume_panel ());
+        
+        panel.halign = Gtk.Align.CENTER;
+        panel.set_margin_bottom (20);
+        
+        return panel;
+    }
+    
+    private Gtk.Box create_eq_panel () {
+        var eq_switch = new Gtk.Switch ();
+        eq_switch.active = true;
+        
+        return create_labeled_component (eq_switch, _("EQ"));
+    }
+    
+    private Gtk.Box create_volume_panel () {      
+        var volume_control = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 1, 0.05);
+        volume_control.set_draw_value (false);
+        volume_control.width_request = 100;
+        volume_control.valign = Gtk.Align.CENTER;
+        
+        volume_control.value_changed.connect (() => {
+            player.set_volume (volume_control.get_value ());
+        });
+        
+        volume_control.set_value (0.5);
+        
+        return create_labeled_component (volume_control, _("Volume"));
+    }
+    
+    private Gtk.Box create_labeled_component (Gtk.Widget widget, string label_text) {
+        var panel = new Gtk.Box (VERTICAL, 2);
+        panel.halign = Gtk.Align.CENTER;
+        panel.valign = Gtk.Align.CENTER;
+
+        var label = new Gtk.Label (label_text);
+        label.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
+        label.margin_end = 14;
+        
+        panel.add (label);
+        panel.add (widget);
+        
+        panel.set_margin_end (20);
+        
+        return panel;
     }
 
     public static int main (string[] args) {

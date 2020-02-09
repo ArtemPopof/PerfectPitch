@@ -26,7 +26,8 @@ public class TimerWidget : Gtk.Label {
 
     public TimerWidget () {
         label = "0";
-        get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
+        set_margin_top (20);
+        get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
     }
     
     private void decrement_time () {

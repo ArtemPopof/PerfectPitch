@@ -69,7 +69,7 @@ public class Application : Gtk.Application, UiGameListener {
         how_to_message.append ("text-x-vala", "Start", _("Try to guess boosted frequency"));
         
         // how to 
-        var header_message = new Gtk.Box (VERTICAL, 2);
+        var header_message = new Gtk.Box (VERTICAL, 3);
         var header_title = new Gtk.Label (_("Guess boosted frequency"));
         header_title.justify = Gtk.Justification.CENTER;
         header_title.hexpand = true;
@@ -78,13 +78,18 @@ public class Application : Gtk.Application, UiGameListener {
         header_description.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
         header_description.get_style_context ().add_class (Gtk.STYLE_CLASS_DIM_LABEL);
 
+
         header_description.justify = Gtk.Justification.CENTER;
         header_description.hexpand = true;
         header_description.wrap = true;
         header_description.wrap_mode = Pango.WrapMode.WORD;
 
+        create_timer_widget ();
+        
         header_message.add (header_title);
-        header_message.add (header_description);        
+        header_message.add (header_description);   
+        header_message.add (timer_widget);
+
         header_message.margin_top = 40;
         header_message.margin_bottom = 40;
 
@@ -93,24 +98,9 @@ public class Application : Gtk.Application, UiGameListener {
         start_button.halign = CENTER;
         start_button.valign = START;
         start_button.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
-
-        // freq cards
-        var guess_variants = new Gtk.Grid ();
-        guess_variants.halign = CENTER;
-
-        for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
-            var card = create_option_card (guess_variants);
-            frequency_options[i] = card;
-        }
+    
         
-        create_timer_widget ();
-
-        // after start panel
-        var after_start_panel = new Gtk.Box (VERTICAL, 2);
-        after_start_panel.add (create_settings_panel ());
-        after_start_panel.add (guess_variants);
-        after_start_panel.add (timer_widget);
-        after_start_panel.valign = START;
+        var after_start_panel = create_main_panel ();
 
         content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
         content_panel.add (header_message);
@@ -127,6 +117,8 @@ public class Application : Gtk.Application, UiGameListener {
             start_button.visible = false;
             after_start_panel.visible = true;            
             controller.start_game ();
+            header_title.label = _("Round 1");
+            header_description.visible = false;
             player.play_file ("///usr/share/artempopof/perfectpitch/sounds/bensound-jazzyfrenchy.mp3");
         });
     }
@@ -236,6 +228,27 @@ public class Application : Gtk.Application, UiGameListener {
         panel.set_margin_end (20);
         
         return panel;
+    }
+    
+    private Gtk.Box create_main_panel () {
+        var after_start_panel = new Gtk.Box (VERTICAL, 2);
+        after_start_panel.add (create_settings_panel ());
+        after_start_panel.add (create_answer_cards_panel ());
+        after_start_panel.valign = START;
+        
+        return after_start_panel;
+    }
+    
+    private Gtk.Grid create_answer_cards_panel () {
+        var guess_variants = new Gtk.Grid ();
+        guess_variants.halign = CENTER;
+
+        for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
+            var card = create_option_card (guess_variants);
+            frequency_options[i] = card;
+        }
+        
+        return guess_variants;
     }
 
     public static int main (string[] args) {

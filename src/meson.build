@@ -3,5 +3,7 @@ sources = files(
     'Player.vala',
     'MainController.vala',
     'UiGameListener.vala',
-    'GuessCard.vala'
+    'GuessCard.vala',
+    'TimerWidget.vala',
+    'TimerCallback.vala'
 )

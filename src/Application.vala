@@ -21,9 +21,11 @@
 public class Application : Gtk.Application, UiGameListener {
 
     private const int ANSWER_OPTIONS_COUNT = 5;
+    private const int ROUND_TIME = 10;
 
     private Player player;
     private MainController controller;
+    private TimerWidget timer_widget;
     
     private GuessCard[] frequency_options = new GuessCard[ANSWER_OPTIONS_COUNT];
 
@@ -41,9 +43,14 @@ public class Application : Gtk.Application, UiGameListener {
         for (int i = 0; i < ANSWER_OPTIONS_COUNT; i++) {
             frequency_options[i].text = wrong_frequencies[i];
         }
+        
+        timer_widget.set_time (ROUND_TIME);
+        timer_widget.start ();
     }
     
     public void lost (string right_frequency) {
+        timer_widget.stop ();
+        
         foreach (var card in frequency_options) {
             if (card.text == right_frequency) {
                 card.container.get_style_context ().add_class ("guess_card_right");
@@ -95,11 +102,14 @@ public class Application : Gtk.Application, UiGameListener {
             var card = create_option_card (guess_variants);
             frequency_options[i] = card;
         }
+        
+        create_timer_widget ();
 
         // after start panel
         var after_start_panel = new Gtk.Box (VERTICAL, 2);
         after_start_panel.add (create_settings_panel ());
         after_start_panel.add (guess_variants);
+        after_start_panel.add (timer_widget);
         after_start_panel.valign = START;
 
         content_panel.get_style_context ().add_class (Granite.STYLE_CLASS_CARD);
@@ -171,6 +181,11 @@ public class Application : Gtk.Application, UiGameListener {
         Granite.Widgets.Utils.set_color_primary (main_window, {0, 222, 0, 256});
         
         return main_window;
+    }
+    
+    private void create_timer_widget () {
+        timer_widget = new TimerWidget ();
+        timer_widget.set_time (ROUND_TIME);
     }
     
     private Gtk.Box create_settings_panel () {

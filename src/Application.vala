@@ -261,11 +261,7 @@ public class Application : Gtk.Application, UiGameListener {
 
     private static void configure_styles () {
         var css_provider = new Gtk.CssProvider ();
-        try {
-            css_provider.load_from_path ("///usr/share/artempopof/perfectpitch/css/main.css");
-        } catch (Error error) {
-            warning ("style configuration failed: %s", error.message);
-        }
+        css_provider.load_from_resource ("/com/github/artempopof/perfectpitch/main.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER); 
    }
 }
